@@ -24,7 +24,26 @@ function setMousePosition(e) {
   mouseY = cmo(e.clientY, true);
   cordX = (_arr.indexOf((mouseX/width)*360)+1);
   cordY = (_arr.indexOf((mouseY/width)*360)+1);
-  // for X vals [16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192]
+  txv = [16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176];
+  // Left to Right
+  closest = txv.reduce((prev,current) => Math.abs(current - cordX)<Math.abs(prev - cordX) ? current : prev);
+  if (closest > 96) {
+    yardline = (((closest - 16)/8)-((((closest - 16)/8) - 10)*2))*5;
+    rightInside = false;
+  } else {
+    yardline = ((closest - 16)/8)*5;
+    rightInside = true;
+  }
+  if (cordX == closest) {
+    cordX = "On the " + yardline;
+  } else if (cordX < closest) {
+    if (rightInside) {
+      cordX = ((cordX-closest)*-1) + " outside the " + yardline;
+    } else {
+      cordX = (closest-cordX) + " inside the " + yardline;
+    }
+  }
+  // Front to Back
   if (cordY > 71) {
     cordY = ((cordY - 86)*-1) + " behind of front sideline"
   } else if (cordY > 57) {
