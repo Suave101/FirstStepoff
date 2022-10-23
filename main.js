@@ -1,8 +1,19 @@
-var width = window.screen.width - 10;
+var width = (window.innerWidth/100)*99;
 var height = width*(479/1080);
+var c;
+var context;
+function resizeCanvas() {
+    width = (window.innerWidth/100)*99;
+    height = width*(479/1080);
+    document.getElementById('temp').innerHTML = '<canvas id="myCanvas" style="margin:0;padding:0" display="inline-block" width="'+ width + '" height="' + height + '"></canvas>';
+    c = document.getElementById("myCanvas");
+    context = c.getContext("2d");
+    window.requestAnimationFrame(gameLoop);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 var turfColor = "#6f8c69";
 var hashandlinecolor = "#FFFFFF";
-document.getElementById('temp').innerHTML = '<canvas id="myCanvas" style="margin:0;padding:0" display="inline-block" width="'+ width + '" height="' + height + '"></canvas>';
 var c = document.getElementById("myCanvas");
 var context = c.getContext("2d");
 var num = 0;
@@ -11,6 +22,7 @@ var mouseY = 0;
 var _arr = [1.875, 3.75, 5.625, 7.5, 9.375, 11.25, 13.125, 15.0, 16.875, 18.75, 20.625, 22.5, 24.375, 26.25, 28.125, 30.0, 31.875, 33.75, 35.625, 37.5, 39.375, 41.25, 43.125, 45.0, 46.875, 48.75, 50.625, 52.5, 54.375, 56.25, 58.125, 60.0, 61.875, 63.75, 65.625, 67.5, 69.375, 71.25, 73.125, 75.0, 76.875, 78.75, 80.625, 82.5, 84.375, 86.25, 88.125, 90.0, 91.875, 93.75, 95.625, 97.5, 99.375, 101.25, 103.125, 105.0, 106.875, 108.75, 110.625, 112.5, 114.375, 116.25, 118.125, 120.0, 121.875, 123.75, 125.625, 127.5, 129.375, 131.25, 133.125, 135.0, 136.875, 138.75, 140.625, 142.5, 144.375, 146.25, 148.125, 150.0, 151.875, 153.75, 155.625, 157.5, 159.375, 161.25, 163.125, 165.0, 166.875, 168.75, 170.625, 172.5, 174.375, 176.25, 178.125, 180.0, 181.875, 183.75, 185.625, 187.5, 189.375, 191.25, 193.125, 195.0, 196.875, 198.75, 200.625, 202.5, 204.375, 206.25, 208.125, 210.0, 211.875, 213.75, 215.625, 217.5, 219.375, 221.25, 223.125, 225.0, 226.875, 228.75, 230.625, 232.5, 234.375, 236.25, 238.125, 240.0, 241.875, 243.75, 245.625, 247.5, 249.375, 251.25, 253.125, 255.0, 256.875, 258.75, 260.625, 262.5, 264.375, 266.25, 268.125, 270.0, 271.875, 273.75, 275.625, 277.5, 279.375, 281.25, 283.125, 285.0, 286.875, 288.75, 290.625, 292.5, 294.375, 296.25, 298.125, 300.0, 301.875, 303.75, 305.625, 307.5, 309.375, 311.25, 313.125, 315.0, 316.875, 318.75, 320.625, 322.5, 324.375, 326.25, 328.125, 330.0, 331.875, 333.75, 335.625, 337.5, 339.375, 341.25, 343.125, 345.0, 346.875, 348.75, 350.625, 352.5, 354.375, 356.25, 358.125, 360.0];
 
 c.addEventListener("mousemove", setMousePosition, false);
+c.addEventListener("mousedown", console.log);
 function cmo(x, isY) {
     arr = [];
     for (let i = 0; i < _arr.length; i++) {
@@ -24,23 +36,34 @@ function setMousePosition(e) {
   mouseY = cmo(e.clientY, true);
   cordX = (_arr.indexOf((mouseX/width)*360)+1);
   cordY = (_arr.indexOf((mouseY/width)*360)+1);
+  if (cordX > 96) {
+    document.getElementById('s12').innerHTML = "<td id='s12'>2</td>";
+  } else {
+    document.getElementById('s12').innerHTML = "<td id='s12'>1</td>";
+  }
   txv = [16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176];
   // Left to Right
   closest = txv.reduce((prev,current) => Math.abs(current - cordX)<Math.abs(prev - cordX) ? current : prev);
   if (closest > 96) {
     yardline = (((closest - 16)/8)-((((closest - 16)/8) - 10)*2))*5;
-    rightInside = false;
+    _side = 2;
   } else {
     yardline = ((closest - 16)/8)*5;
-    rightInside = true;
+    _side = 1;
   }
   if (cordX == closest) {
     cordX = "On the " + yardline;
   } else if (cordX < closest) {
-    if (rightInside) {
-      cordX = ((cordX-closest)*-1) + " outside the " + yardline;
+    if (_side == 1) {
+      cordX = Math.abs(cordX-closest) + " outside the " + yardline;
     } else {
-      cordX = (closest-cordX) + " inside the " + yardline;
+      cordX = Math.abs(closest-cordX) + " inside the " + yardline;
+    }
+  } else if (cordX > closest) {
+    if (_side == 1) {
+      cordX = Math.abs(closest-cordX) + " inside the " + yardline;
+    } else {
+      cordX = Math.abs(cordX-closest) + " outside the " + yardline;
     }
   }
   // Front to Back
@@ -61,8 +84,71 @@ function setMousePosition(e) {
   } else if (cordY < 28) {
     cordY = ((cordY - 28)*-1) + " behind of back hash"
   }
-  document.getElementById('cords').innerHTML = "<p id='cords'>" + cordX + " | " + cordY + "</p><br>";
+  //<td id="tlr">??</td>
+  //      <td id="tfb">??</td>
+  //      <td id="s12">??</td>
+  document.getElementById('tlr').innerHTML = "<td id='tlr'>" + cordX + "</td>";
+  document.getElementById('tfb').innerHTML = "<td id='tfb'>" + cordY + "</td>";
 }
+//  function newSetMousePosition(e) {
+//    mouseX = cmo(e.clientX, false);
+//    mouseY = cmo(e.clientY, true);
+//    cordX = (_arr.indexOf((mouseX/width)*360)+1);
+//    cordY = (_arr.indexOf((mouseY/width)*360)+1);
+//    if (cordX > 96) {
+//      document.getElementById('s12').innerHTML = "<td id='s12'>2</td>";
+//    } else {
+//      document.getElementById('s12').innerHTML = "<td id='s12'>1</td>";
+//    }
+//    txv = [16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176];
+//    // Left to Right
+//    closest = txv.reduce((prev,current) => Math.abs(current - cordX)<Math.abs(prev - cordX) ? current : prev);
+//    if (closest > 96) {
+//      yardline = (((closest - 16)/8)-((((closest - 16)/8) - 10)*2))*5;
+//      _side = 2;
+//    } else {
+//      yardline = ((closest - 16)/8)*5;
+//      _side = 1;
+//    }
+//    if (cordX == closest) {
+//      cordX = "On the " + yardline;
+//    } else if (cordX < closest) {
+//      if (_side == 1) {
+//        cordX = Math.abs(cordX-closest) + " outside the " + yardline;
+//      } else {
+//        cordX = Math.abs(closest-cordX) + " inside the " + yardline;
+//      }
+//    } else if (cordX > closest) {
+//      if (_side == 1) {
+//        cordX = Math.abs(closest-cordX) + " inside the " + yardline;
+//      } else {
+//        cordX = Math.abs(cordX-closest) + " outside the " + yardline;
+//      }
+//    }
+//    // Front to Back
+//    if (cordY > 71) {
+//      cordY = ((cordY - 86)*-1) + " behind of front sideline"
+//    } else if (cordY > 57) {
+//      cordY = (cordY - 57) + " in front of front hash"
+//    } else if (cordY == 57) {
+//      cordY = "On front hash"
+//    } else if (cordY == 28) {
+//      cordY = "On Back Hash"
+//    } else if ((28 < cordY) && (cordY < 42)) {
+//      cordY = (cordY - 28) + " in front of back hash"
+//    } else if (((cordY > 41) && (cordY < 57))) {
+//      cordY = ((cordY - 57)*-1) + " behind of front hash"
+//    } else if (cordY < 14) {
+//      cordY = cordY + 1 + " in front of back sideline"
+//    } else if (cordY < 28) {
+//      cordY = ((cordY - 28)*-1) + " behind of back hash"
+//    }
+//    //<td id="tlr">??</td>
+//    //      <td id="tfb">??</td>
+//    //      <td id="s12">??</td>
+//    document.getElementById('tlr').innerHTML = "<td id='tlr'>" + cordX + "</td>";
+//    document.getElementById('tfb').innerHTML = "<td id='tfb'>" + cordY + "</td>";
+//  }
 window.requestAnimationFrame(gameLoop);
 function drawVerticalLine(feetfromleg) {
     context.strokeStyle = hashandlinecolor;
