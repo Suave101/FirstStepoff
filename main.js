@@ -2,6 +2,7 @@ var width = (window.innerWidth/100)*99;
 var height = width*(479/1080);
 var c;
 var context;
+var ___temp = false;
 function resizeCanvas() {
     width = (window.innerWidth/100)*99;
     height = width*(479/1080);
@@ -9,6 +10,10 @@ function resizeCanvas() {
     c = document.getElementById("myCanvas");
     context = c.getContext("2d");
     window.requestAnimationFrame(gameLoop);
+    if (___temp == true) {
+        window.location.reload();
+    }
+    ___temp = true;
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
