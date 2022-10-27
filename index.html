@@ -9,6 +9,10 @@
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
+}
+#labelCordStable {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
   width: 100%;
 }
 
@@ -16,14 +20,24 @@ td, th {
   border: 1px solid #dddddd;
   text-align: center;
   padding: 8px;
-  width: 25%
 }
 
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+.temp {
+    display: inline-block;
+}
+table#infoTable {
+    width: 15%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    overflow-y: scroll;
+}
 </style>
 <body style="margin:0;padding:0">
+<h1>First Stepoff</h1>
     <div id="temp"></div>
     <script src="main.js"></script>
     <table id="labelCordStable">
@@ -34,7 +48,7 @@ tr:nth-child(even) {
         <th>Side 1/2</th>
       </tr>
       <tr>
-        <th id="set#">Active Pointer Cordinates</th>
+        <th id="set#">Active Mouse Position</th>
         <td id="tlr">??</td>
         <td id="tfb">??</td>
         <td id="s12">??</td>
