@@ -4,55 +4,149 @@
     <meta charset="UTF-8">
     <title>First Stepoff</title>
     <link rel="icon" type="image/x-icon" href="logos/svg/logo-no-background.svg">
+    <script src="main.js" defer></script>
 </head>
 <style>
+#marcherManagementDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: #6f8c69;
+  border-radius: 5em;
+  padding: 2em;
+  margin: 1em;
+}
+._CGcircleElement {
+  flex: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background-color: #575757;
+  border-radius: 5em;
+  margin: 1em;
+  padding: 2em;
+}
+._CGmarcherElement {
+  flex: 25%;
+  display: inline-block;
+  background-color: #000080;
+  color: white;
+  border-radius: 1em;
+  padding: 0.25em;
+  margin: 0.5em;
+}
+.tableDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #575757;
+  border-radius: 10em;
+  margin-right: 15%;
+  margin-left: 15%;
+}
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
 }
 #labelCordStable {
+  margin: 1em;
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 100%;
+  width: 40em;
 }
-
 td, th {
-  border: 1px solid #dddddd;
+  border-radius: 10px;
   text-align: center;
-  padding: 8px;
+  padding: 3px;
 }
 
-tr:nth-child(even) {
+tr:nth-child(odd) {
   background-color: #dddddd;
+  color: #000000;
+}
+tr:nth-child(even) {
+  background-color: #000000;
+  color: #dddddd;
 }
 .temp {
-    display: inline-block;
+  justify-content: center;
+  align-items: center;
+  background-color: #dddddd;
+  display: inline-block;
+}
+.topDiv {
+  width: 100%;
 }
 table#infoTable {
     width: 15%;
     height: 100%;
     display: inline-block;
     vertical-align: top;
-    overflow-y: scroll;
+}
+h1 {
+  color: black;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+body {
+  background-color: grey;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+.flex-container {
+  display: flex;
+  justify-content: center;
+  background-color: #575757;
+  border-radius: 10em;
+  margin-right: 3%;
+  margin-left: 3%;
+  margin-bottom: 1%;
+}
+.flex-container > button {
+  border-radius: 10em;
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+.flex-container > button:hover {
+  border-radius: 10em;
+  background-color: #575757;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+#setNumber {
+  text-align: center; 
 }
 </style>
 <body style="margin:0;padding:0">
-<h1>First Stepoff</h1>
-    <div id="temp"></div>
-    <script src="main.js"></script>
+  <h1>First Stepoff</h1>
+  <div class="flex-container">
+    <button onclick="setModeDot()">Create Dot</button>
+    <button onclick="setModeCircle()">Create Circle</button>
+    <button id="arcButton" onclick="alert('Feature Coming Soon')">Create Arc</button>
+    <button onclick="alert('Feature Coming Soon')">Create File/Column</button>
+  </div>
+  <div class="tableDiv">
     <table id="labelCordStable">
-      <tr>
-        <th>Instrument Label</th>
-        <th>Left to Right</th>
-        <th>Front to Back</th>
-        <th>Side 1/2</th>
-      </tr>
-      <tr>
-        <th id="set#">Active Mouse Position</th>
-        <td id="tlr">??</td>
-        <td id="tfb">??</td>
-        <td id="s12">??</td>
-      </tr>
-    </table>
+    <tr>
+      <th>Left to Right</th>
+      <th>Front to Back</th>
+      <th>Side 1/2</th>
+      <th>Set #</th>
+    </tr>
+    <tr>
+      <td id="tlr">??</td>
+      <td id="tfb">??</td>
+      <td id="s12">??</td>
+      <td id="setNumberContainer"><input type="number" value="1" id="setNumber" min="1" disabled="true"></td>
+    </tr>
+  </table>
+</div>
+  <div id="temp"></div>
+  <h1 draggable="false">Field: </h1>
+  <div id="marcherManagementDiv" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  <div id="circleManagementDiv"></div>
 </body>
 </html>
