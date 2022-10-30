@@ -89,7 +89,6 @@ function setMousePosition(e) {
   //<td id="tlr">??</td>
   //      <td id="tfb">??</td>
   //      <td id="s12">??</td>
-  // temp
   document.getElementById('tlr').innerHTML = "<td id='tlr'>" + cordX + "</td>";
   document.getElementById('tfb').innerHTML = "<td id='tfb'>" + cordY + "</td>";
 }
@@ -177,7 +176,7 @@ function newSetMousePosition(e) {
         conditionMet = false;
         radius = -1;
         while ((conditionMet == false) || radius == null) {
-          radius = window.prompt("Radius: ");
+          radius = window.prompt("Radius in Feet: ");
           if (radius == null) {
             conditionMet = null;
           }
@@ -254,10 +253,9 @@ function drawPointsOnCircle(_item) {
   // TODO: Fix
   for (let z = 0; z < _item[9].length; z++) {
     context.beginPath();
-    _circumfrence = ((_item[8][0]*2*Math.PI)/width)*360;
-    console.log(z);
-    context.arc((((Math.cos((z*_circumfrence)/_item[9].length)/360)*width)/360)*width+_item[0], (((Math.sin((_circumfrence*z)/_item[9].length)/360)*width)/360)*width+_item[1], (1/360)*width, 0, 2 * Math.PI);
-    console.log((((Math.cos((z*_circumfrence)/_item[9].length)/360)*width)/360)*width+_item[0], (((Math.sin((_circumfrence*z)/_item[9].length)/360)*width)/360)*width+_item[1]);
+    // https://math.stackexchange.com/questions/1267646/finding-vertices-of-regular-polygon
+    _radius = ((_item[8][0]/360)*width);
+    context.arc((Math.cos((z*2*Math.PI)/_item[9].length)*_radius)+_item[0], (Math.sin((z*2*Math.PI)/_item[9].length)*_radius)+_item[1], (1/360)*width, 0, 2 * Math.PI);
     context.stroke();
   }
 }
@@ -323,12 +321,11 @@ function drop(ev) {
         ___tableList[i][1] = null;
         ___tableList[i][4] = null;
         ___tableList[i][5] = null;
-        _item = ___tableList[i];
       }
     }
     for (let i = 0; i < ___tableList.length; i++) {
       if (___tableList[i][10] == ev.target.id) {
-        ___tableList[i][9].push(_item)
+        ___tableList[i][9].push(_element.id)
       }
     }
   }
