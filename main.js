@@ -89,6 +89,7 @@ function setMousePosition(e) {
   //<td id="tlr">??</td>
   //      <td id="tfb">??</td>
   //      <td id="s12">??</td>
+  // temp
   document.getElementById('tlr').innerHTML = "<td id='tlr'>" + cordX + "</td>";
   document.getElementById('tfb').innerHTML = "<td id='tfb'>" + cordY + "</td>";
 }
