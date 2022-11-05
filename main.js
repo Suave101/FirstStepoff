@@ -296,8 +296,20 @@ function manageSets() {
   }
   _setLastCheck = currentSet;
 }
+function manageOptions() {
+  let marcherManagementDiv = document.getElementById("marcherManagementDiv");
+  let circleManagementDiv = document.getElementById("circleManagementDiv");
+  if (document.getElementById("_SOM_O").checked) {
+    marcherManagementDiv.style.display = "none";
+    circleManagementDiv.style.display = "none";
+  } else {
+    marcherManagementDiv.style.display = "block";
+    circleManagementDiv.style.display = "block";
+  }
+}
 function draw() {
     manageSets();
+    manageOptions();
     width = c.width;
     height = c.height;
     context.clearRect(0, 0, c.width, c.height);
