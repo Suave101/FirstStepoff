@@ -3,7 +3,6 @@ var height = width*(479/1080);
 var c;
 var context;
 var ___temp = false;
-document.getElementById("_SOM_O").checked = true;
 document.getElementById('temp').innerHTML = '<canvas id="myCanvas" style="margin:0;padding:0;display:inline-block;" width="'+ width + '" height="' + height + '"></canvas>';
 c = document.getElementById("myCanvas");
 var cRect = c.getBoundingClientRect();
@@ -314,9 +313,18 @@ function manageOptions() {
 
   }
 }
+function manageTable() {
+  // let tableObject = document.getElementById("69696");
+  // for (let i = 1; 1 < tableObject.rows.length; i++) {
+  //   // TODO:
+  //   // if row not in IMPORTANT SET LIST delete
+  //   // Update Rows
+  // }
+}
 function draw() {
     manageSets();
     manageOptions();
+    manageTable();
     width = c.width;
     height = c.height;
     context.clearRect(0, 0, c.width, c.height);

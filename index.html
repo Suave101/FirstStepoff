@@ -46,27 +46,23 @@
   margin-right: 15%;
   margin-left: 15%;
 }
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-}
 #labelCordStable {
   margin: 1em;
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 40em;
 }
-td, th {
+.skunk td, .skunk th {
   border-radius: 10px;
   text-align: center;
   padding: 3px;
 }
 
-tr:nth-child(odd) {
+.skunk tr:nth-child(odd) {
   background-color: #dddddd;
   color: #000000;
 }
-tr:nth-child(even) {
+.skunk tr:nth-child(even) {
   background-color: #000000;
   color: #dddddd;
 }
@@ -274,6 +270,39 @@ input:checked + .slider:before {
   justify-self: center;
   align-self: center;
 }
+.styled-table {
+    border-collapse: collapse;
+    margin: 5%;
+    width: 90%;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr:hover {
+    font-weight: bold;
+    color: #009879;
+}
 </style>
 <body style="margin:0;padding:0">
   <div class="topnav">
@@ -283,7 +312,7 @@ input:checked + .slider:before {
   <div id="myNav" class="overlay">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <div class="overlay-content">
-      <p>Show Object Manager: <label class="switch"><input type="checkbox" id="_SOM_O"><span class="slider round"></span></label></p></br>
+      <p>Show Object Manager: <label class="switch"><input type="checkbox" id="_SOM_O" checked="true"><span class="slider round"></span></label></p></br>
     </div>
   </div>
   <div class="flex-container">
@@ -293,18 +322,18 @@ input:checked + .slider:before {
     <button onclick="alert('Feature Coming Soon')">Create File/Column</button>
   </div>
   <div class="tableDiv">
-    <table id="labelCordStable">
-    <tr>
-      <th>Left to Right</th>
-      <th>Front to Back</th>
-      <th>Side 1/2</th>
-      <th>Set #</th>
+    <table class="skunk" id="labelCordStable">
+    <tr class="skunk">
+      <th class="skunk">Left to Right</th>
+      <th class="skunk">Front to Back</th>
+      <th class="skunk">Side 1/2</th>
+      <th class="skunk">Set #</th>
     </tr>
-    <tr>
-      <td id="tlr">??</td>
-      <td id="tfb">??</td>
-      <td id="s12">??</td>
-      <td id="setNumberContainer"><input type="number" value="1" id="SET_INPUT" min="1"></td>
+    <tr class="skunk">
+      <td class="skunk" id="tlr">??</td>
+      <td class="skunk" id="tfb">??</td>
+      <td class="skunk" id="s12">??</td>
+      <td class="skunk" id="setNumberContainer"><input type="number" value="1" id="SET_INPUT" min="1"></td>
     </tr>
   </table>
 </div>
@@ -312,5 +341,22 @@ input:checked + .slider:before {
   <h1 id="fieldManagementLabel" draggable="false">Field: </h1>
   <div id="marcherManagementDiv" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
   <div id="circleManagementDiv"></div>
+  <div id="setsTableDiv">
+    <table class="styled-table" id="69696">
+      <thead>
+          <tr>
+              <th>Object Type</th>
+              <th>Label</th>
+              <th>Left to Right</th>
+              <th>Front to Back</th>
+              <th>Side</th>
+              <th>ID</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr><td>???</td><td>???</td><td>???</td><td>???</td><td>???</td><td>???</td></tr>
+      </tbody>
+  </table>
+  </div>
 </body>
 </html>
