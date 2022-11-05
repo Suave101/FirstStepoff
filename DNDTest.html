@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        .Ddiv {
+          width: 350px;
+          height: 70px;
+          padding: 10px;
+          border: 1px solid #aaaaaa;
+        }
+        #drag1 {
+            display: inline-block;
+            color: antiquewhite;
+            background-color: black;
+        }
+        </style>
+</head>
+<body>
+    <script>
+        function allowDrop(ev) {
+          ev.preventDefault();
+        }
+
+        function drag(ev) {
+          ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+          ev.preventDefault();
+          var data = ev.dataTransfer.getData("text");
+          ev.target.appendChild(document.getElementById(data));
+          console.log(ev.target.id);
+        }
+    </script>
+    <div class="Ddiv" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <div class="Ddiv" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+    <div id="drag1" draggable="true" ondragstart="drag(event)" width="336" height="69">1Test</div>
+    <div id="drag2" draggable="true" ondragstart="drag(event)" width="336" height="69">2Test</div>
+    <div id="drag3" draggable="true" ondragstart="drag(event)" width="336" height="69">3Test</div>
+    <div id="drag4" draggable="true" ondragstart="drag(event)" width="336" height="69">4Test</div>  
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" style="margin:0;padding:0">
+<head>
+    <meta charset="UTF-8">
+    <title>First Stepoff</title>
+    <link rel="icon" type="image/x-icon" href="logos/svg/logo-no-background.svg">
+</head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+#labelCordStable {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+.temp {
+    display: inline-block;
+}
+table#infoTable {
+    width: 15%;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+h1 {
+  color: black;
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+body {
+  background-color: grey;
+}
+.flex-container {
+  display: flex;
+  justify-content: center;
+  background-color: #575757;
+  border-radius: 10em;
+  margin-right: 3%;
+  margin-left: 3%;
+}
+.flex-container > button {
+  border-radius: 10em;
+  background-color: #f1f1f1;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+.flex-container > button:hover {
+  border-radius: 10em;
+  background-color: #575757;
+  margin: 10px;
+  padding: 20px;
+  font-size: 30px;
+}
+</style>
+<body style="margin:0;padding:0">
+<h1>First Stepoff</h1>
+    <div id="temp"></div>
+    <script src="main.js"></script>
+    <div class="flex-container">
+      <button onclick="setModeDot()">Create Dot</button>
+      <button onclick="setModeCircle()">Create Circle</button>
+      <button onclick="alert('Feature Coming Soon')">Create Arc</button>
+      <button onclick="alert('Feature Coming Soon')">Create File/Column</button>
+    </div>
+    <table id="labelCordStable">
+      <tr>
+        <th>Field Elements</th>
+        <th>Left to Right</th>
+        <th>Front to Back</th>
+        <th>Side 1/2</th>
+      </tr>
+      <tr>
+        <th id="set#">Active Mouse Position</th>
+        <td id="tlr">??</td>
+        <td id="tfb">??</td>
+        <td id="s12">??</td>
+      </tr>
+    </table>
+</body>
+</html>
