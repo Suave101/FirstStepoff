@@ -3,6 +3,7 @@ var height = width*(479/1080);
 var c;
 var context;
 var ___temp = false;
+document.getElementById("_SOM_O").checked = true;
 document.getElementById('temp').innerHTML = '<canvas id="myCanvas" style="margin:0;padding:0;display:inline-block;" width="'+ width + '" height="' + height + '"></canvas>';
 c = document.getElementById("myCanvas");
 var cRect = c.getBoundingClientRect();
@@ -299,12 +300,18 @@ function manageSets() {
 function manageOptions() {
   let marcherManagementDiv = document.getElementById("marcherManagementDiv");
   let circleManagementDiv = document.getElementById("circleManagementDiv");
+  let fieldManagementLabel = document.getElementById("fieldManagementLabel");
   if (document.getElementById("_SOM_O").checked) {
-    marcherManagementDiv.style.display = "none";
-    circleManagementDiv.style.display = "none";
-  } else {
     marcherManagementDiv.style.display = "block";
     circleManagementDiv.style.display = "block";
+    fieldManagementLabel.style.display = "block";
+  } else {
+    marcherManagementDiv.style.display = "none";
+    circleManagementDiv.style.display = "none";
+    fieldManagementLabel.style.display = "none";
+
+
+
   }
 }
 function draw() {
