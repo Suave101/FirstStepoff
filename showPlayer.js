@@ -1,10 +1,10 @@
-alert("To Developer: Please add a show player app so I can see my show in real time.");
+alert("This Page is Under Development Currently");
 var width = (window.innerWidth/100)*95;
 var height = width*(479/1080);
 var c;
 var context;
 var ___temp = false;
-document.getElementById('temp').innerHTML = '<canvas id="myCanvas" style="margin:0;padding:0;display:inline-block;" width="'+ width + '" height="' + height + '"></canvas>';
+document.getElementById('temp').innerHTML = '<canvas id="myCanvas" style="margin:0;padding:0;display:inline-block;cursor: auto;" width="'+ width + '" height="' + height + '"></canvas>';
 c = document.getElementById("myCanvas");
 var cRect = c.getBoundingClientRect();
 context = c.getContext("2d");
@@ -32,7 +32,6 @@ var IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST = {1: {dots: 0, circles: 0, arcs
 var currentSet = 1;
 var _setLastCheck = 1;
 
-c.addEventListener("mousemove", setMousePosition, false);
 c.addEventListener("mousedown", newSetMousePosition);
 function cmo(x) {
     let arr = [];
@@ -41,63 +40,6 @@ function cmo(x) {
     }
     closestNumb = arr.sort((a,b) => Math.abs(b - x) - Math.abs(a-x)).pop();;
     return closestNumb;
-}
-function setMousePosition(e) {
-  cRect = c.getBoundingClientRect();
-  mouseX = cmo(e.clientX - cRect.left);
-  mouseY = cmo(e.clientY - cRect.top);
-  cordX = (_arr.indexOf((mouseX/width)*360)+1);
-  cordY = (_arr.indexOf((mouseY/width)*360)+1);
-  if (cordX > 96) {
-    document.getElementById('s12').innerHTML = "<td id='s12'>2</td>";
-  } else {
-    document.getElementById('s12').innerHTML = "<td id='s12'>1</td>";
-  }
-  txv = [16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176];
-  // Left to Right
-  closest = txv.reduce((prev,current) => Math.abs(current - cordX)<Math.abs(prev - cordX) ? current : prev);
-  if (closest > 96) {
-    yardline = (((closest - 16)/8)-((((closest - 16)/8) - 10)*2))*5;
-    _side = 2;
-  } else {
-    yardline = ((closest - 16)/8)*5;
-    _side = 1;
-  }
-  if (cordX == closest) {
-    cordX = "On the " + yardline;
-  } else if (cordX < closest) {
-    if (_side == 1) {
-      cordX = Math.abs(cordX-closest) + " outside the " + yardline;
-    } else {
-      cordX = Math.abs(closest-cordX) + " inside the " + yardline;
-    }
-  } else if (cordX > closest) {
-    if (_side == 1) {
-      cordX = Math.abs(closest-cordX) + " inside the " + yardline;
-    } else {
-      cordX = Math.abs(cordX-closest) + " outside the " + yardline;
-    }
-  }
-  // Front to Back
-  if (cordY > 71) {
-    cordY = ((cordY - 86)*-1) + " behind of front sideline";
-  } else if (cordY > 57) {
-    cordY = (cordY - 57) + " in front of front hash";
-  } else if (cordY == 57) {
-    cordY = "On front hash";
-  } else if (cordY == 28) {
-    cordY = "On Back Hash";
-  } else if ((28 < cordY) && (cordY < 42)) {
-    cordY = (cordY - 28) + " in front of back hash";
-  } else if (((cordY > 41) && (cordY < 57))) {
-    cordY = ((cordY - 57)*-1) + " behind of front hash";
-  } else if (cordY < 14) {
-    cordY = cordY + 1 + " in front of back sideline";
-  } else if (cordY < 28) {
-    cordY = ((cordY - 28)*-1) + " behind of back hash";
-  }
-  document.getElementById('tlr').innerHTML = "<td id='tlr'>" + cordX + "</td>";
-  document.getElementById('tfb').innerHTML = "<td id='tfb'>" + cordY + "</td>";
 }
 function newSetMousePosition(e) {
   cRect = c.getBoundingClientRect();
@@ -279,61 +221,7 @@ function drawPointsOnCircle(_item) {
     context.stroke();
   }
 }
-function manageSets() {
-  let setInputElement = document.getElementById("SET_INPUT");
-  currentSet = setInputElement.value;
-  let _MMD = document.getElementById("marcherManagementDiv");
-  let _CMD = document.getElementById("circleManagementDiv");
-  if (currentSet == _setLastCheck) {
-    IMPORTANT_MASTER_HTML_LIST[currentSet] = [structuredClone(_MMD.outerHTML), structuredClone(_CMD.outerHTML)];
-  } else {
-    if (IMPORTANT_MASTER_HTML_LIST[currentSet] == undefined) {
-      IMPORTANT_MASTER_HTML_LIST[currentSet] = ['<div id="marcherManagementDiv" ondrop="drop(event)" ondragover="allowDrop(event)"></div>', '<div id="circleManagementDiv"></div>'];
-    }
-    if (IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST[currentSet] == undefined) {
-      IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST[currentSet] = {dots: 0, circles: 0, arcs: 0, files: 0};
-    }
-    _MMD.outerHTML = IMPORTANT_MASTER_HTML_LIST[currentSet][0];
-    _CMD.outerHTML = IMPORTANT_MASTER_HTML_LIST[currentSet][1];
-  }
-  _setLastCheck = currentSet;
-}
-function manageOptions() {
-  let marcherManagementDiv = document.getElementById("marcherManagementDiv");
-  let circleManagementDiv = document.getElementById("circleManagementDiv");
-  let fieldManagementLabel = document.getElementById("fieldManagementLabel");
-  let labelCordStable = document.getElementById("labelCordStable");
-  let videosArea = document.getElementById("videosArea");
-  if (document.getElementById("_SOM_O").checked) {
-    marcherManagementDiv.style.display = "block";
-    circleManagementDiv.style.display = "block";
-    fieldManagementLabel.style.display = "block";
-  } else {
-    marcherManagementDiv.style.display = "none";
-    circleManagementDiv.style.display = "none";
-    fieldManagementLabel.style.display = "none";
-  }
-  if (document.getElementById("_SOT_O").checked) {
-    labelCordStable.style.display = "block";
-  } else {
-    labelCordStable.style.display = "none";
-  }
-  if (document.getElementById("_SVA_O").checked) {
-    videosArea.style.display = "block";
-  } else {
-    videosArea.style.display = "none";
-  }
-}
-function manageTable() {
-  // let tableObject = document.getElementById("69696");
-  // if (checkArraySame(IMPORTANT_MASTER_SET_LIST, old_IMPORTANT_MASTER_SET_LIST) == false) {
-  //   console.log("Set List Change");
-  // }
-  // old_IMPORTANT_MASTER_SET_LIST = structuredClone(IMPORTANT_MASTER_SET_LIST);
-}
 function draw() {
-  manageSets();
-  setFileLink();
   width = c.width;
   height = c.height;
   context.clearRect(0, 0, c.width, c.height);
@@ -374,108 +262,9 @@ function draw() {
   context.arc(mouseX, mouseY, (1/360)*width, 0, 2 * Math.PI);
   context.fillStyle = "#FF6A6A";
   context.fill();
-  manageOptions();
-  manageTable();
 }
 function gameLoop() {
   old_IMPORTANT_MASTER_SET_LIST = structuredClone(IMPORTANT_MASTER_SET_LIST);
   draw();
   window.requestAnimationFrame(gameLoop);
-}
-function allowDrop(ev) {
-  ev.preventDefault();
-}
-
-function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function drop(ev) {
-  ev.preventDefault();
-  var data = ev.dataTransfer.getData("text");
-  _element = document.getElementById(data);
-  if (ev.target.id.startsWith('_CGmarcherElement') == false) {
-    ev.target.appendChild(_element);
-    for (let i = 0; i < IMPORTANT_MASTER_SET_LIST[currentSet].length; i++) {
-      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][3] == _element.innerHTML) {
-        if (ev.target.id.startsWith('marcherManagementDiv')) {
-          IMPORTANT_MASTER_SET_LIST[currentSet][i][10] = true;
-        } else {
-          IMPORTANT_MASTER_SET_LIST[currentSet][i][10] = false;
-        }
-        
-      }
-    }
-    for (let i = 0; i < IMPORTANT_MASTER_SET_LIST[currentSet].length; i++) {
-      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][10] == ev.target.id) {
-        IMPORTANT_MASTER_SET_LIST[currentSet][i][9].push(_element.id)
-      }
-    }
-  }
-}
-function openNav() {
-  document.getElementById("myNav").style.width = "100%";
-  document.getElementById("_body").style.overflow = "hidden";
-}
-
-function closeNav() {
-  document.getElementById("myNav").style.width = "0%";
-  document.getElementById("_body").style.overflow = "";
-}
-let slideIndex = 1;
-showSlides(slideIndex);
-
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
-
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("_mySlides");
-  let dots = document.getElementsByClassName("_dot");
-  if (n > slides.length) {slideIndex = 1}    
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";  
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" _active", "");
-  }
-  slides[slideIndex-1].style.display = "block";  
-  dots[slideIndex-1].className += " _active";
-}
-function setFileLink() {
-  let link = document.getElementById("_Download");
-  console.log(encodeURI(JSON.stringify({"HTML": IMPORTANT_MASTER_HTML_LIST, "COUNTS": IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST, "SETS": IMPORTANT_MASTER_SET_LIST})));
-  link.setAttribute('href', "data:text/json;charset=utf-8," + encodeURI(JSON.stringify({"HTML": IMPORTANT_MASTER_HTML_LIST, "COUNTS": IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST, "SETS": IMPORTANT_MASTER_SET_LIST, "RESOLUTION": {"x": width,"y": height}})));
-}
-function getDownloadedShow() {
-  let input = document.createElement('input');
-  input.type = 'file';
-
-  input.onchange = e => { 
-     var file = e.target.files[0];
-     var reader = new FileReader();
-     reader.readAsText(file,'UTF-8');
-     reader.onload = readerEvent => {
-        var content = readerEvent.target.result;
-        console.log( content );
-        if (JSON.parse(content)["RESOLUTION"] != {"x": width,"y": height}) {
-          alert("Warning: Bad Resolution");
-        }
-        try {
-          IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST = JSON.parse(content)["COUNTS"];
-          IMPORTANT_MASTER_HTML_LIST = JSON.parse(content)["HTML"];
-          IMPORTANT_MASTER_SET_LIST = JSON.parse(content)["SETS"];
-        } catch {
-          alert("Bad File");
-        }
-     }
-
-  }
-  input.click();
 }
