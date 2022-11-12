@@ -9,8 +9,29 @@
 </head>
 <body style="margin:0;padding:0" id="_body">
   <div class="topnav">
-    <p><a href="https://suave101.github.io/FirstStepoff/">First Stepoff - Show Player</p>
+    <p>First Stepoff - Show Player</p>
   </div>
+  <div class="flex-container">
+    <button onclick="getDownloadedShow()">Upload Show</button>
+  </div>
+  <div class="tableDiv">
+    <table class="skunk" id="labelCordStable">
+    <tr class="skunk">
+      <th class="skunk">Left to Right</th>
+      <th class="skunk">Front to Back</th>
+      <th class="skunk">Side 1/2</th>
+      <th class="skunk">Set #</th>
+      <th class="skunk">Even Sets</th>
+    </tr>
+    <tr class="skunk">
+      <td class="skunk" id="tlr">??</td>
+      <td class="skunk" id="tfb">??</td>
+      <td class="skunk" id="s12">??</td>
+      <td class="skunk" id="setNumberContainer"><input type="number" value="1" id="SET_INPUT" min="1"></td>
+      <th class="skunk" id="evenSetsCheck">???</th>
+    </tr>
+  </table>
+</div>
   <div id="temp"></div>
 </body>
 </html>
