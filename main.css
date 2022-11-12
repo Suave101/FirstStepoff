@@ -55,6 +55,11 @@ a {
   color: inherit; /* blue colors for links too */
   text-decoration: inherit; /* no underline */
 }
+a:-webkit-any-link {
+  color: inherit;
+  cursor: inherit;
+  text-decoration: inherit;
+}
 .skunk tr:nth-child(odd) {
   background-color: #dddddd;
   color: #000000;
