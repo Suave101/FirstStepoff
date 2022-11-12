@@ -105,17 +105,17 @@ function newSetMousePosition(e) {
   cRect = c.getBoundingClientRect();
   mouseX = cmo(e.clientX - cRect.left);
   mouseY = cmo(e.clientY - cRect.top);
-  let _mouseX = structuredClone(mouseX);
-  let _mouseY = structuredClone(mouseY);
   let _bad = false;
   for (let i = 0; i < IMPORTANT_MASTER_SET_LIST[currentSet].length; i++) {
-    if ((IMPORTANT_MASTER_SET_LIST[currentSet][i][0] == mouseX) && (IMPORTANT_MASTER_SET_LIST[currentSet][i][1] == mouseY)) {
+    if ((((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width == mouseX) && (((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width == mouseY)) {
         _bad = true;
     }
   }
   if (_bad == false) {
       let cordX = (_arr.indexOf((mouseX/width)*360)+1);
       let cordY = (_arr.indexOf((mouseY/width)*360)+1);
+      let _cordX = structuredClone(cordX);
+      let _cordY = structuredClone(cordY);
       let _cell4;
       if (cordX > 96) {
         _cell4 = "2";
@@ -211,7 +211,7 @@ function newSetMousePosition(e) {
           circleElement.setAttribute('ondragover', "allowDrop(event);")
           _circleManagementDivObject = document.getElementById("circleManagementDiv");
           _circleManagementDivObject.appendChild(circleElement);
-          IMPORTANT_MASTER_SET_LIST[currentSet].push([_mouseX, _mouseY, _amount, mode + _amount, cordX, cordY, _cell4, mode, [radius], [], "_CGcirlceElement_" + _amount]);
+          IMPORTANT_MASTER_SET_LIST[currentSet].push([_cordX, _cordY, _amount, mode + _amount, cordX, cordY, _cell4, mode, [radius], [], "_CGcirlceElement_" + _amount]);
         }
       } else if (mode == modes.dot) {
         let marcherElement = document.createElement("div");
@@ -222,7 +222,7 @@ function newSetMousePosition(e) {
         marcherElement.setAttribute('ondragstart', "drag(event)")
         let _marcherManagementDivObject = document.getElementById("marcherManagementDiv");
         _marcherManagementDivObject.appendChild(marcherElement);
-        IMPORTANT_MASTER_SET_LIST[currentSet].push([_mouseX, _mouseY, _amount, mode + _amount, cordX, cordY, _cell4, mode, null, null]);
+        IMPORTANT_MASTER_SET_LIST[currentSet].push([_cordX, _cordY, _amount, mode + _amount, cordX, cordY, _cell4, mode, null, null]);
       }
   } else {
     alert("People Can't March On top of each other silly");
@@ -349,7 +349,7 @@ function draw() {
     if (IMPORTANT_MASTER_SET_LIST[currentSet][i][10] != false) {
       context.beginPath();
     }
-    context.arc(IMPORTANT_MASTER_SET_LIST[currentSet][i][0], IMPORTANT_MASTER_SET_LIST[currentSet][i][1], (1/360)*width, 0, 2 * Math.PI);
+    context.arc(((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width, ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width, (1/360)*width, 0, 2 * Math.PI);
     if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.dot) {
       context.fillStyle = dotCircleColor;
     } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
@@ -362,7 +362,7 @@ function draw() {
     context.fill();
     if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
       context.beginPath();
-      context.arc(IMPORTANT_MASTER_SET_LIST[currentSet][i][0], IMPORTANT_MASTER_SET_LIST[currentSet][i][1], (IMPORTANT_MASTER_SET_LIST[currentSet][i][8][0]/360)*width, 0, 2 * Math.PI);
+      context.arc(((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width, ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width, (IMPORTANT_MASTER_SET_LIST[currentSet][i][8][0]/360)*width, 0, 2 * Math.PI);
       context.stroke();
       drawPointsOnCircle(IMPORTANT_MASTER_SET_LIST[currentSet][i]);
     } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
@@ -380,6 +380,23 @@ function draw() {
 }
 function gameLoop() {
   old_IMPORTANT_MASTER_SET_LIST = structuredClone(IMPORTANT_MASTER_SET_LIST);
+  let evenSetsId = document.getElementById("evenSetsCheck");
+  let _lastVal;
+  let setsAreEven = true;
+  for (let z = 0; z < Object.keys(IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST).length; z++) {
+    if (z == 0) {
+      _lastVal = IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST[z+1]['dots'];
+    }
+    if (IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST[z+1]['dots'] != _lastVal) {
+      setsAreEven = false;
+      break;
+    };
+  }
+  if (setsAreEven) {
+    evenSetsId.innerText = "✅";
+  } else {
+    evenSetsId.innerText = "❌";
+  }
   draw();
   window.requestAnimationFrame(gameLoop);
 }
@@ -451,8 +468,7 @@ function showSlides(n) {
 }
 function setFileLink() {
   let link = document.getElementById("_Download");
-  console.log(encodeURI(JSON.stringify({"HTML": IMPORTANT_MASTER_HTML_LIST, "COUNTS": IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST, "SETS": IMPORTANT_MASTER_SET_LIST})));
-  link.setAttribute('href', "data:text/json;charset=utf-8," + encodeURI(JSON.stringify({"HTML": IMPORTANT_MASTER_HTML_LIST, "COUNTS": IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST, "SETS": IMPORTANT_MASTER_SET_LIST, "RESOLUTION": {"x": width,"y": height}})));
+  link.setAttribute('href', "data:text/json;charset=utf-8," + encodeURI(JSON.stringify({"HTML": IMPORTANT_MASTER_HTML_LIST, "COUNTS": IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST, "SETS": IMPORTANT_MASTER_SET_LIST})));
 }
 function getDownloadedShow() {
   let input = document.createElement('input');
@@ -465,9 +481,6 @@ function getDownloadedShow() {
      reader.onload = readerEvent => {
         var content = readerEvent.target.result;
         console.log( content );
-        if (JSON.parse(content)["RESOLUTION"] != {"x": width,"y": height}) {
-          alert("Warning: Bad Resolution");
-        }
         try {
           IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST = JSON.parse(content)["COUNTS"];
           IMPORTANT_MASTER_HTML_LIST = JSON.parse(content)["HTML"];
