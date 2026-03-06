@@ -1,5 +1,5 @@
 'use strict';
-alert('Show Player Under Construction: Please note that dots will move in future');
+alert('Show Player Under Construction: Please note that dots will move correctly in future');
 var width = (window.innerWidth/100)*95;
 var height = width*(479/1080);
 var c;
@@ -31,8 +31,12 @@ var IMPORTANT_MASTER_SET_LIST = {1: [], 2: [], 3: []};''
 var old_IMPORTANT_MASTER_SET_LIST = {1: [], 2: [], 3: []};
 var IMPORTANT_MASTER_HTML_LIST = {};
 var IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST = {1: {dots: 0, circles: 0, arcs: 0, files: 0}};
+var timeToAnimateMili = 5000;
 var currentSet = 1;
 var _setLastCheck = 1;
+var animateScene = false;
+var animateSceneTimestamp;
+var animateFrom;
 
 c.addEventListener("mousemove", setMousePosition, false);
 function cmo(x) {
@@ -130,7 +134,7 @@ function setModeDot() {
 function setModeCircle() {
   mode = modes.circle;
 }
-function drawPointsOnCircle(_item) {
+function drawPointsOnCircle(_item, animatingVals) {
   // [_mouseX, _mouseY, structuredClone(IMPORTANT_MASTER_SET_LIST[currentSet].length + 2), mode + _amount, cordX, cordY, _cell4, mode, null, null]
   _dpoctemp = new Array();
   _temp_circleManagementDivObject = document.getElementById("_CGcirlceElement_" + _item[2]);
@@ -140,21 +144,45 @@ function drawPointsOnCircle(_item) {
   }
   for (let z = 0; z < _item[9].length; z++) {
     if (_dpoctemp.includes(_item[9][z]) == false) {
-      _item[9].pop(z)
+      _item[9].pop(z);
     }
   }
-  for (let z = 0; z < _item[9].length; z++) {
-    context.beginPath();
-    // https://math.stackexchange.com/questions/1267646/finding-vertices-of-regular-polygon
-    _radius = ((_item[8][0]/360)*width);
-    context.arc((Math.cos((z*2*Math.PI)/_item[9].length)*_radius)+_item[0], (Math.sin((z*2*Math.PI)/_item[9].length)*_radius)+_item[1], (1/360)*width, 0, 2 * Math.PI);
-    context.stroke();
-  }
+  if ((animateScene == true) && (animatingVals != null)) {
+    for (let z = 0; z < _item[9].length; z++) {
+      context.beginPath();
+      // https://math.stackexchange.com/questions/1267646/finding-vertices-of-regular-polygon
+      _radius = ((_item[8][0]/360)*width);
+      context.arc((Math.cos((z*2*Math.PI)/_item[9].length)*_radius)+animatingVals[0], (Math.sin((z*2*Math.PI)/_item[9].length)*_radius)+animatingVals[1], (1/360)*width, 0, 2 * Math.PI);
+      context.stroke();
+    }
+  } else {
+    for (let z = 0; z < _item[9].length; z++) {
+      context.beginPath();
+      // https://math.stackexchange.com/questions/1267646/finding-vertices-of-regular-polygon
+      _radius = ((_item[8][0]/360)*width);
+      context.arc((Math.cos((z*2*Math.PI)/_item[9].length)*_radius)+_item[0], (Math.sin((z*2*Math.PI)/_item[9].length)*_radius)+_item[1], (1/360)*width, 0, 2 * Math.PI);
+      context.stroke();
+    }
+  }  
 }
 function manageSets() {
   let setInputElement = document.getElementById("SET_INPUT");
   currentSet = setInputElement.value;
+  if (currentSet != _setLastCheck) {
+    animateScene = true;
+    animateFrom = _setLastCheck;
+    console.log(new Date());
+    animateSceneTimestamp = new Date();
+    setInputElement.disabled = true;
+  }
   _setLastCheck = currentSet;
+}
+function pointPercentage(starting, landing, percentageDecimal) {
+  if (starting > landing) {
+    return starting-(Math.abs(starting-landing)*percentageDecimal);
+  } else {
+    return starting+(Math.abs(starting-landing)*percentageDecimal);
+  }
 }
 function draw() {
   manageSets();
@@ -168,30 +196,69 @@ function draw() {
   if (IMPORTANT_MASTER_SET_LIST[currentSet] == null) {
     IMPORTANT_MASTER_SET_LIST[currentSet] = [];
   }
-  for (let i = 0; i < IMPORTANT_MASTER_SET_LIST[currentSet].length; i++) {
-    if (IMPORTANT_MASTER_SET_LIST[currentSet][i][10] != false) {
-      context.beginPath();
+  if (animateScene == true) {if ((((new Date()) - animateSceneTimestamp)/timeToAnimateMili) > 1) {animateScene = false;document.getElementById("SET_INPUT").disabled = false;}}
+  if (animateScene == true) {
+    let drawLoopTime = new Date();
+    let percentage = (drawLoopTime - animateSceneTimestamp)/timeToAnimateMili;
+    console.log(percentage);
+    for (let i = 0; i < IMPORTANT_MASTER_SET_LIST[currentSet].length; i++) {
+      let pastX = ((IMPORTANT_MASTER_SET_LIST[animateFrom][i][0]*1.875)/360)*width;
+      let pastY = ((IMPORTANT_MASTER_SET_LIST[animateFrom][i][1]*1.875)/360)*width;
+      let currentX = ((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width;
+      let currentY = ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width;
+      let convertedX = pointPercentage(pastX, currentX, percentage);
+      let convertedY = pointPercentage(pastY, currentY, percentage);
+      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][10] != false) {
+        context.beginPath();
+      }
+      context.arc(convertedX, convertedY, (1/360)*width, 0, 2 * Math.PI);
+      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.dot) {
+        context.fillStyle = dotCircleColor;
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
+        context.fillStyle = circleCircleColor;
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
+        context.fillStyle = arcCircleColor;
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.file) {
+        context.fillStyle = fileCircleColor;
+      }
+      context.fill();
+      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
+        context.beginPath();
+        context.arc(convertedX, convertedY, (IMPORTANT_MASTER_SET_LIST[currentSet][i][8][0]/360)*width, 0, 2 * Math.PI);
+        context.stroke();
+        drawPointsOnCircle(IMPORTANT_MASTER_SET_LIST[currentSet][i], [convertedX, convertedY]);
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
+        alert("Bad Thing Happened");
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.file) {
+        alert("Bad Thing Happened");
+      }
     }
-    context.arc(((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width, ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width, (1/360)*width, 0, 2 * Math.PI);
-    if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.dot) {
-      context.fillStyle = dotCircleColor;
-    } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
-      context.fillStyle = circleCircleColor;
-    } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
-      context.fillStyle = arcCircleColor;
-    } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.file) {
-      context.fillStyle = fileCircleColor;
-    }
-    context.fill();
-    if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
-      context.beginPath();
-      context.arc(((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width, ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width, (IMPORTANT_MASTER_SET_LIST[currentSet][i][8][0]/360)*width, 0, 2 * Math.PI);
-      context.stroke();
-      drawPointsOnCircle(IMPORTANT_MASTER_SET_LIST[currentSet][i]);
-    } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
-      alert("Bad Thing Happened");
-    } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.file) {
-      alert("Bad Thing Happened");
+  } else {
+    for (let i = 0; i < IMPORTANT_MASTER_SET_LIST[currentSet].length; i++) {
+      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][10] != false) {
+        context.beginPath();
+      }
+      context.arc(((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width, ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width, (1/360)*width, 0, 2 * Math.PI);
+      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.dot) {
+        context.fillStyle = dotCircleColor;
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
+        context.fillStyle = circleCircleColor;
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
+        context.fillStyle = arcCircleColor;
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.file) {
+        context.fillStyle = fileCircleColor;
+      }
+      context.fill();
+      if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.circle) {
+        context.beginPath();
+        context.arc(((IMPORTANT_MASTER_SET_LIST[currentSet][i][0]*1.875)/360)*width, ((IMPORTANT_MASTER_SET_LIST[currentSet][i][1]*1.875)/360)*width, (IMPORTANT_MASTER_SET_LIST[currentSet][i][8][0]/360)*width, 0, 2 * Math.PI);
+        context.stroke();
+        drawPointsOnCircle(IMPORTANT_MASTER_SET_LIST[currentSet][i], null);
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.arc) {
+        alert("Bad Thing Happened");
+      } else if (IMPORTANT_MASTER_SET_LIST[currentSet][i][7] == modes.file) {
+        alert("Bad Thing Happened");
+      }
     }
   }
   context.beginPath();
@@ -201,7 +268,6 @@ function draw() {
 }
 function gameLoop() {
   old_IMPORTANT_MASTER_SET_LIST = structuredClone(IMPORTANT_MASTER_SET_LIST);
-  document.getElementById("setNumberContainer").setAttribute('max', (Object.keys(IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST).length));
   let evenSetsId = document.getElementById("evenSetsCheck");
   let _lastVal;
   let setsAreEven = true;
@@ -235,6 +301,7 @@ function getDownloadedShow() {
         try {
           IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST = JSON.parse(content)["COUNTS"];
           IMPORTANT_MASTER_SET_LIST = JSON.parse(content)["SETS"];
+          document.getElementById("SET_INPUT").setAttribute('max', (Object.keys(IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST).length));
         } catch {
           alert("Bad File");
         }

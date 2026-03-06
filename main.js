@@ -32,6 +32,7 @@ var IMPORTANT_MASTER_HTML_LIST = {};
 var IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST = {1: {dots: 0, circles: 0, arcs: 0, files: 0}};
 var currentSet = 1;
 var _setLastCheck = 1;
+var setsAreEven = true;
 
 c.addEventListener("mousemove", setMousePosition, false);
 c.addEventListener("mousedown", newSetMousePosition);
@@ -382,15 +383,20 @@ function gameLoop() {
   old_IMPORTANT_MASTER_SET_LIST = structuredClone(IMPORTANT_MASTER_SET_LIST);
   let evenSetsId = document.getElementById("evenSetsCheck");
   let _lastVal;
-  let setsAreEven = true;
+  let goofey = true;
   for (let z = 0; z < Object.keys(IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST).length; z++) {
     if (z == 0) {
       _lastVal = IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST[z+1]['dots'];
     }
     if (IMPORTANT_MASTER_FIELD_ELEMENT_AMOUNTS_LIST[z+1]['dots'] != _lastVal) {
-      setsAreEven = false;
+      goofey = false;
       break;
     };
+  }
+  if (goofey == false) {
+    setsAreEven = false;
+  } else {
+    setsAreEven = true;
   }
   if (setsAreEven) {
     evenSetsId.innerText = "✅";
@@ -492,4 +498,9 @@ function getDownloadedShow() {
 
   }
   input.click();
+}
+function warnOddSets() {
+  if (setsAreEven == false) {
+    alert("Show Will not Play in Show Player");
+  }
 }
